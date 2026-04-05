@@ -284,6 +284,8 @@ void write_bindings(NC::Scrollpad &w)
 #	endif // HAVE_TAGLIB_H
 	key(w, Type::StartSearching, "Start searching");
 	key(w, Type::ResetSearchEngine, "Reset search constraints and clear results");
+	key(w, Type::NextSearchPage, "Next page of search results");
+	key(w, Type::PrevSearchPage, "Previous page of search results");
 
 	key_section(w, "Media library");
 	key(w, Type::ToggleMediaLibraryColumnsMode, "Switch between two/three columns mode");
