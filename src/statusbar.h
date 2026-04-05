@@ -26,6 +26,8 @@
 #include "settings.h"
 #include "interfaces.h"
 
+struct SearchEngine;
+
 namespace Progressbar {
 
 struct ScopedLock
@@ -113,10 +115,22 @@ private:
 	const SearchDirection m_direction;
 };
 
+struct SearchDatabaseImmediately
+{
+	SearchDatabaseImmediately(SearchEngine *se)
+		: m_se(se)
+	{ }
+
+	bool operator()(const char *s);
+
+private:
+	SearchEngine *m_se;
+};
+
 struct TryExecuteImmediateCommand
 {
 	bool operator()(const char *s);
-	
+
 private:
 	std::string m_s;
 };

@@ -24,6 +24,7 @@
 #include "statusbar.h"
 #include "bindings.h"
 #include "screens/playlist.h"
+#include "screens/search_engine.h"
 #include "utility/wide_string.h"
 
 using Global::wFooter;
@@ -250,6 +251,24 @@ bool Statusbar::Helpers::FindImmediately::operator()(const char *s)
 			myScreen->refreshWindow();
 		}
 	} catch (boost::bad_expression &) { }
+	return true;
+}
+
+bool Statusbar::Helpers::SearchDatabaseImmediately::operator()(const char *s)
+{
+	using Global::myScreen;
+	Status::trace();
+	std::string query(s);
+	if (query.length() >= 2)
+	{
+		m_se->searchDatabase(query);
+		myScreen->refreshWindow();
+	}
+	else if (query.empty())
+	{
+		m_se->searchDatabase("");
+		myScreen->refreshWindow();
+	}
 	return true;
 }
 
