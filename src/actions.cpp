@@ -1137,7 +1137,7 @@ void ToggleDisplayMode::run()
 				break;
 		}
 		Statusbar::printf("Search engine display mode: %1%", Config.search_engine_display_mode);
-		if (mySearcher->main().size() > SearchEngine::StaticOptions)
+		if (!mySearcher->main().empty())
 			mySearcher->main().setTitle(
 				   Config.search_engine_display_mode == DisplayMode::Columns
 				&& Config.titles_visibility
@@ -1290,16 +1290,12 @@ void ToggleRandom::run()
 
 bool StartSearching::canBeRun()
 {
-	return myScreen == mySearcher && !mySearcher->main()[0].isInactive();
+	return myScreen == mySearcher;
 }
 
 void StartSearching::run()
 {
-	mySearcher->main().highlight(SearchEngine::SearchButton);
-	mySearcher->main().setHighlighting(0);
-	mySearcher->main().refresh();
-	mySearcher->main().setHighlighting(1);
-	mySearcher->runAction();
+	mySearcher->openSearchPrompt();
 }
 
 bool SaveTagChanges::canBeRun()
