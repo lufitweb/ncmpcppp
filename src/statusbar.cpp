@@ -259,7 +259,7 @@ bool Statusbar::Helpers::SearchDatabaseImmediately::operator()(const char *s)
 	using Global::myScreen;
 	Status::trace();
 	std::string query(s);
-	if (query.length() >= 2)
+	if (query.length() >= 3)
 	{
 		m_se->searchDatabase(query);
 		myScreen->refreshWindow();
