@@ -316,7 +316,7 @@ void SearchEngine::nextPage()
 	{
 		++m_current_page;
 		displayPage();
-		Statusbar::printf("Page %1%/%2% (%3% results)",
+		Statusbar::printf("Page %1%/%2% (%3% results, ctrl-f/ctrl-b: next/prev)",
 			m_current_page + 1, totalPages(), m_all_results.size());
 	}
 }
@@ -327,7 +327,7 @@ void SearchEngine::prevPage()
 	{
 		--m_current_page;
 		displayPage();
-		Statusbar::printf("Page %1%/%2% (%3% results)",
+		Statusbar::printf("Page %1%/%2% (%3% results, ctrl-f/ctrl-b: next/prev)",
 			m_current_page + 1, totalPages(), m_all_results.size());
 	}
 }
@@ -355,7 +355,7 @@ void SearchEngine::openSearchPrompt()
 	{
 		size_t found = m_all_results.size();
 		if (totalPages() > 1)
-			Statusbar::printf("Found %1% %2% (page 1/%3%)",
+			Statusbar::printf("Found %1% %2% | page 1/%3% (ctrl-f/ctrl-b: next/prev)",
 				found, found == 1 ? "song" : "songs", totalPages());
 		else
 			Statusbar::printf("Found %1% %2%", found, found == 1 ? "song" : "songs");
