@@ -155,7 +155,7 @@ void SearchEngine::switchTo()
 
 std::wstring SearchEngine::title()
 {
-	return L"Search engine (y: search)";
+	return L"Search engine";
 }
 
 void SearchEngine::mouseButtonPressed(MEVENT me)
@@ -292,23 +292,26 @@ void SearchEngine::openSearchPrompt()
 	using Global::wFooter;
 
 	Statusbar::ScopedLock slock;
-	Statusbar::put() << NC::Format::Bold << "Search: " << NC::Format::NoBold;
+	Statusbar::put() << NC::Format::Bold << "Search(y): " << NC::Format::NoBold;
 
 	NC::Window::ScopedPromptHook helper(*wFooter,
 		Statusbar::Helpers::SearchDatabaseImmediately(this));
 
+	std::string query;
 	try {
-		m_last_query = wFooter->prompt(m_last_query);
+		query = wFooter->prompt(m_last_query);
 	} catch (NC::PromptAborted &) {
-		// user pressed ctrl-c/ctrl-g, keep current results
+		return;
 	}
+
+	m_last_query = query;
 
 	if (!w.empty())
 	{
 		size_t found = w.size();
 		Statusbar::printf("Found %1% %2%", found, found == 1 ? "song" : "songs");
 	}
-	else if (!m_last_query.empty())
+	else if (!query.empty())
 		Statusbar::print("No results found");
 }
 
