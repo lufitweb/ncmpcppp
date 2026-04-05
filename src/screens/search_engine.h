@@ -132,10 +132,19 @@ struct SearchEngine: Screen<SearchEngineWindow>, Filterable, HasActions, HasSong
 	void searchDatabase(const std::string &query);
 	void openSearchPrompt();
 	void reset();
+	void nextPage();
+	void prevPage();
+	size_t currentPage() const { return m_current_page; }
+	size_t totalPages() const;
 
 private:
+	void displayPage();
+
 	Regex::ItemFilter<SEItem> m_search_predicate;
 	std::string m_last_query;
+	std::vector<MPD::Song> m_all_results;
+	size_t m_current_page;
+	static const size_t PageSize = 50;
 };
 
 extern SearchEngine *mySearcher;

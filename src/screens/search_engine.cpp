@@ -119,6 +119,7 @@ std::vector<MPD::Song> SearchEngineWindow::getSelectedSongs()
 
 SearchEngine::SearchEngine()
 : Screen(NC::Menu<SEItem>(0, MainStartY, COLS, MainHeight, "", Config.main_color, NC::Border()))
+, m_current_page(0)
 {
 	setHighlightFixes(w);
 	w.cyclicScrolling(Config.use_cyclic_scrolling);
@@ -272,6 +273,8 @@ std::vector<MPD::Song> SearchEngine::getSelectedSongs()
 void SearchEngine::searchDatabase(const std::string &query)
 {
 	m_last_query = query;
+	m_current_page = 0;
+	m_all_results.clear();
 	w.clearFilter();
 	w.clear();
 
@@ -281,10 +284,52 @@ void SearchEngine::searchDatabase(const std::string &query)
 	Mpd.StartSearch(false);
 	Mpd.AddSearchAny(query);
 	for (MPD::SongIterator s = Mpd.CommitSearchSongs(), end; s != end; ++s)
-		w.addItem(std::move(*s));
+		m_all_results.push_back(std::move(*s));
+
+	displayPage();
+}
+
+void SearchEngine::displayPage()
+{
+	w.clear();
+
+	size_t start = m_current_page * PageSize;
+	size_t end = std::min(start + PageSize, m_all_results.size());
+
+	for (size_t i = start; i < end; ++i)
+		w.addItem(m_all_results[i]);
 
 	if (Config.search_engine_display_mode == DisplayMode::Columns && Config.titles_visibility)
 		w.setTitle(Display::Columns(w.getWidth()));
+}
+
+size_t SearchEngine::totalPages() const
+{
+	if (m_all_results.empty())
+		return 0;
+	return (m_all_results.size() + PageSize - 1) / PageSize;
+}
+
+void SearchEngine::nextPage()
+{
+	if (m_current_page + 1 < totalPages())
+	{
+		++m_current_page;
+		displayPage();
+		Statusbar::printf("Page %1%/%2% (%3% results)",
+			m_current_page + 1, totalPages(), m_all_results.size());
+	}
+}
+
+void SearchEngine::prevPage()
+{
+	if (m_current_page > 0)
+	{
+		--m_current_page;
+		displayPage();
+		Statusbar::printf("Page %1%/%2% (%3% results)",
+			m_current_page + 1, totalPages(), m_all_results.size());
+	}
 }
 
 void SearchEngine::openSearchPrompt()
@@ -306,10 +351,14 @@ void SearchEngine::openSearchPrompt()
 
 	m_last_query = query;
 
-	if (!w.empty())
+	if (!m_all_results.empty())
 	{
-		size_t found = w.size();
-		Statusbar::printf("Found %1% %2%", found, found == 1 ? "song" : "songs");
+		size_t found = m_all_results.size();
+		if (totalPages() > 1)
+			Statusbar::printf("Found %1% %2% (page 1/%3%)",
+				found, found == 1 ? "song" : "songs", totalPages());
+		else
+			Statusbar::printf("Found %1% %2%", found, found == 1 ? "song" : "songs");
 	}
 	else if (!query.empty())
 		Statusbar::print("No results found");
@@ -318,6 +367,8 @@ void SearchEngine::openSearchPrompt()
 void SearchEngine::reset()
 {
 	m_last_query.clear();
+	m_all_results.clear();
+	m_current_page = 0;
 	w.clearFilter();
 	w.clear();
 	w.setTitle("");
