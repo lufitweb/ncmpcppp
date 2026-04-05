@@ -144,7 +144,7 @@ private:
 	std::string m_last_query;
 	std::vector<MPD::Song> m_all_results;
 	size_t m_current_page;
-	static const size_t PageSize = 50;
+	static const size_t PageSize = 25;
 };
 
 extern SearchEngine *mySearcher;
