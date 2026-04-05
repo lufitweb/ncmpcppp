@@ -760,6 +760,10 @@ void BindingsConfiguration::generateDefaults()
 	}
 	if (notBound(k = stringToKey("ctrl-p")))
 		bind(k, Actions::Type::SetSelectedItemsPriority);
+	if (notBound(k = stringToKey("ctrl-f")))
+		bind(k, Actions::Type::NextSearchPage);
+	if (notBound(k = stringToKey("ctrl-b")))
+		bind(k, Actions::Type::PrevSearchPage);
 	if (notBound(k = stringToKey("q")))
 		bind(k, Actions::Type::Quit);
 }
