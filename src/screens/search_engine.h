@@ -94,21 +94,20 @@ struct SearchEngineWindow: NC::Menu<SEItem>, SongList
 struct SearchEngine: Screen<SearchEngineWindow>, Filterable, HasActions, HasSongs, Searchable, Tabbable
 {
 	SearchEngine();
-	
-	// Screen<SearchEngineWindow> implementation
+
 	virtual void resize() override;
 	virtual void switchTo() override;
-	
+
 	virtual std::wstring title() override;
 	virtual ScreenType type() override { return ScreenType::SearchEngine; }
-	
+
 	virtual void update() override { }
-	
+
 	virtual void mouseButtonPressed(MEVENT me) override;
-	
+
 	virtual bool isLockable() override { return true; }
 	virtual bool isMergable() override { return true; }
-	
+
 	// Searchable implementation
 	virtual bool allowsSearching() override;
 	virtual const std::string &searchConstraint() override;
@@ -129,32 +128,16 @@ struct SearchEngine: Screen<SearchEngineWindow>, Filterable, HasActions, HasSong
 	virtual bool itemAvailable() override;
 	virtual bool addItemToPlaylist(bool play) override;
 	virtual std::vector<MPD::Song> getSelectedSongs() override;
-	
-	// private members
-	void reset();
-	
-	static size_t StaticOptions;
-	static size_t SearchButton;
-	static size_t ResetButton;
-	
-private:
-	void Prepare();
-	void Search();
 
+	void searchDatabase(const std::string &query);
+	void openSearchPrompt();
+	void reset();
+
+private:
 	Regex::ItemFilter<SEItem> m_search_predicate;
-	
-	const char **SearchMode;
-	
-	static const char *SearchModes[];
-	
-	static const size_t ConstraintsNumber = 11;
-	static const char *ConstraintsNames[];
-	std::string itsConstraints[ConstraintsNumber];
-	
-	static bool MatchToPattern;
+	std::string m_last_query;
 };
 
 extern SearchEngine *mySearcher;
 
 #endif // NCMPCPP_SEARCH_ENGINE_H
-
