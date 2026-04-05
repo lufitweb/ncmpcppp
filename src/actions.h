@@ -156,6 +156,8 @@ enum class Type
 	ChangeBrowseMode,
 	ShowSearchEngine,
 	ResetSearchEngine,
+	NextSearchPage,
+	PrevSearchPage,
 	ShowMediaLibrary,
 	ToggleMediaLibraryColumnsMode,
 	ShowPlaylistEditor,
@@ -1345,6 +1347,24 @@ struct ResetSearchEngine: BaseAction
 {
 	ResetSearchEngine(): BaseAction(Type::ResetSearchEngine, "reset_search_engine") { }
 	
+private:
+	virtual bool canBeRun() override;
+	virtual void run() override;
+};
+
+struct NextSearchPage: BaseAction
+{
+	NextSearchPage(): BaseAction(Type::NextSearchPage, "next_search_page") { }
+
+private:
+	virtual bool canBeRun() override;
+	virtual void run() override;
+};
+
+struct PrevSearchPage: BaseAction
+{
+	PrevSearchPage(): BaseAction(Type::PrevSearchPage, "prev_search_page") { }
+
 private:
 	virtual bool canBeRun() override;
 	virtual void run() override;

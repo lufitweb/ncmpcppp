@@ -2615,6 +2615,26 @@ void ResetSearchEngine::run()
 	mySearcher->reset();
 }
 
+bool NextSearchPage::canBeRun()
+{
+	return myScreen == mySearcher && mySearcher->totalPages() > 1;
+}
+
+void NextSearchPage::run()
+{
+	mySearcher->nextPage();
+}
+
+bool PrevSearchPage::canBeRun()
+{
+	return myScreen == mySearcher && mySearcher->currentPage() > 0;
+}
+
+void PrevSearchPage::run()
+{
+	mySearcher->prevPage();
+}
+
 bool ShowMediaLibrary::canBeRun()
 {
 	return myScreen != myLibrary
@@ -2874,6 +2894,8 @@ void populateActions()
 	insert_action(new Actions::ChangeBrowseMode());
 	insert_action(new Actions::ShowSearchEngine());
 	insert_action(new Actions::ResetSearchEngine());
+	insert_action(new Actions::NextSearchPage());
+	insert_action(new Actions::PrevSearchPage());
 	insert_action(new Actions::ShowMediaLibrary());
 	insert_action(new Actions::ToggleMediaLibraryColumnsMode());
 	insert_action(new Actions::ShowPlaylistEditor());
